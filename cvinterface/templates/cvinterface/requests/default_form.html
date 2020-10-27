@@ -1,0 +1,50 @@
+{% extends 'cvinterface/base.html' %}
+{% load widget_tweaks %}
+{% load tools %}
+
+{% block body %}
+    <section class="request-create">
+        <header>
+            <h2>
+                New Request<span class="vocabulary-type">{{ vocabulary_verbose }}</span>
+                <span class="parent-link">
+                    <a href="{% url vocabulary %}" class="tooltip" data-tip="Navigate to the {{ vocabulary_verbose }} vocabulary list.">⤴</a>
+                </span>
+            </h2>
+            <h4>Make a request to add or modify a term.</h4>
+        </header>
+        
+        <div class="row">
+            <form class="column" action="" method="post">{% csrf_token %}
+                {% for field_name in view.fields %}
+                    {% if field_name in form.fields and field_name not in submitter_fields %}
+                        {% with form|get:field_name as field %}
+                            {% print_field field %}
+                        {% endwith %}
+                    {% endif %}
+                {% endfor %}
+
+                <div class="clear"></div>
+                <hr class="separator three-columns">
+
+                {% for submitter_field_name in submitter_fields %}
+                    {% with form|get:submitter_field_name as field %}
+                        {% print_field field %}
+                    {% endwith %}
+                {% endfor %}
+
+                <div class="list-item no-robots">
+                    <div class="g-recaptcha" data-sitekey="{{ recaptcha_user_key }}"></div>
+                    <div class="form-errors-item not-human-error">{% if '__all__' in form.errors %}{{ form.errors|get:'__all__' }}{% endif %}</div>
+                </div>
+
+                <div class="clear"></div>
+                <div class="form-buttons">
+                    <input class="button white" type="submit" value="Submit Request">
+                </div>
+
+            </form>
+        </div>
+        <div class="clear"></div>
+    </section>
+{% endblock %}

@@ -1,0 +1,31 @@
+{
+  "allowed_hosts" : "{{wade_allowed_hosts}}",
+  "secret_key": "{{secret_key}}",
+  "static_root": "{{static_root}}",
+  "email_sender": "{{email_sender}}",
+  "email_recipients": "{{email_recipients}}",
+  "email_host_user": "{{email_host_user}}",
+  "email_host_password": "{{email_host_password}}",
+  "recaptcha_secret_key": "{{wade_recaptcha_secret_key}}",
+  "recaptcha_user_key": "{{wade_recaptcha_user_key}}",
+  "databases": [
+    {
+      "name": "default",
+      "schema": "{{wade_db_name}}",
+      "engine": "django.db.backends.mysql",
+      "user": "{{wade_db_user}}",
+      "password": "{{wade_db_password}}",
+      "host": "{{wade_db_container}}",
+      "port": "3306"
+    },
+    {
+      "name": "vocabularies",
+      "schema": "{{wade_db_name}}",
+      "engine": "django.db.backends.mysql",
+      "user": "{{wade_db_user}}",
+      "password": "{{wade_db_password}}",
+      "host": "{{wade_db_container}}",
+      "port": "3306"
+    }
+  ]
+}

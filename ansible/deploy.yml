@@ -1,0 +1,111 @@
+---
+# If you need to deploy on another group of hosts change the value below 
+# to point to another group as defined in your `hosts` file.
+- hosts: 127.0.0.1
+  connection: local
+  vars_files:
+    - vars.yml
+  gather_facts: yes
+  become: yes
+
+  tasks:
+    - name: Install system packages
+      apt: pkg={{item}} update-cache=yes
+      with_items:
+        - docker.io
+        - git
+        - python-pip
+        - python-dev
+    - name: Install python packages
+      pip:
+        name: "{{item}}"
+        state: latest
+      with_items:
+        - docker-compose
+
+    - name: Clean clone path
+      file:
+        state: absent
+        path: "{{clone_location}}/"
+
+    - name: Creates clone location and subdirectories
+      file: path={{item}} state=directory
+      with_items:
+        - "{{clone_location}}/conf.d/"
+
+    - name: Clone/pull project repo
+      git: repo={{project_repo}} dest={{clone_location}}/{{app_name}} accept_hostkey=True force=True
+      
+    - name: copy wade django config
+      template: src=files/settings_wade.j2 dest={{clone_location}}/{{app_name}}/settings/settings.json force=yes
+
+    - name: copy dockerfile
+      template: src=files/dockerfile.j2 dest={{clone_location}}/Dockerfile force=yes
+
+    - name: copy nginx virtualhost
+      template: src=files/nginx.j2 dest={{clone_location}}/conf.d/{{app_name}}.conf force=yes
+
+    - name: Create wade network
+      docker_network:
+        name: wade_wade
+
+    - name: Create nginx container if not present
+      docker_container:
+        name: nginx
+        state: started
+        image: nginx:latest
+        ports:
+         - "80:80"
+        volumes:
+         - "{{clone_location}}/conf.d:/etc/nginx/conf.d"
+        networks:
+         - name: wade_wade
+
+    - docker_service:
+        project_name: "{{app_name}}"
+        build: yes
+        definition:
+          version: '2'
+          services:
+            wade:
+              networks:
+              - wade_wade
+              container_name: "{{wade_container}}"
+              restart: always
+              build: "{{clone_location}}"
+              command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic --noinput && python manage.py createsu {{wade_admin_user}} {{wade_admin_email}} {{wade_admin_pass}} && python manage.py createsu {{wade_admin_user1}} {{wade_admin_email1}} {{wade_admin_pass1}} && gunicorn wsgi -b 0.0.0.0:8000"
+              volumes:
+                - "{{excel_location}}:/spreadsheets"
+                - "{{clone_location}}/{{app_name}}:/srv"
+              depends_on:
+                - wade_db
+              links:
+                - wade_db:wade_db
+              expose:
+                - "8000"
+
+            wade_db:
+              networks:
+              - wade_wade
+              container_name: "{{wade_db_container}}"
+              image: mysql:5.7
+              restart: always
+              environment:
+                MYSQL_DATABASE: "{{wade_db_name}}"
+                MYSQL_USER: "{{wade_db_user}}"
+                MYSQL_PASSWORD: "{{wade_db_password}}"
+                MYSQL_ROOT_PASSWORD: "{{mysql_root_passwd}}"
+              expose:
+                - "3306"
+
+          networks:
+            wade_wade:
+              external:
+                name: wade_wade
+
+    - name: Restart nginx container
+      docker_container:
+        name: nginx
+        image: nginx:latest
+        state: started
+        restart: yes

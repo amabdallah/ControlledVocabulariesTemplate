@@ -1,0 +1,43 @@
+{"models" : [
+    {
+        "name": "LuBeneficialUse",
+        "description" : "This table is based on the [use] column in the [vw_CDSS_NetAmts] view, but the definitions have been recreated so that the user can see the full definition."
+    },
+
+    {
+        "name": "LuCropType",
+        "description" : "To be added."
+    },
+
+    {
+        "name": "LuFreshSalineIndicator",
+        "description" : "This table is based on the reported water quality of the resource in question. The default for Colorado is fresh/potable water."
+    },
+
+    {
+        "name": "LuGeneratorType",
+        "description" : "To be added."
+    },
+
+    {
+        "name": "LuIrrigationMethod",
+        "description" : "To be added."
+    },
+
+    {
+        "name": "LuLegalStatus",
+        "description" : "This table is based on the [vw_CDSS_NetAmts] view. "
+    },
+
+    {
+        "name": "LuRegulatoryStatus",
+        "description" : "To be added."
+    },
+
+    {
+        "name": "LuSourceType",
+        "description" : "This table contains the source type characteristics listed in the HydroBase Data Dictionary Appendix. These values are currently not used in the HydroBase WaDE data."
+    }
+]
+
+}

@@ -1,0 +1,50 @@
+{% extends 'cvinterface/base.html' %}
+
+{% block title %}
+    <title>ODM2 CV term: {{ object.term }}</title> 
+{% endblock %}
+
+{% block body %}
+    <section class="concept-detail">
+        <header>
+            <h2>
+                {{ object.name }}<span class="vocabulary-type">{{ vocabulary_verbose }}</span>
+                <span class="parent-link">
+                    <a href="{% url vocabulary %}" class="tooltip" data-tip="Navigate to the {{ vocabulary_verbose }} vocabulary list.">⤴</a>
+                </span>
+            </h2>
+            <h4>{{ object.definition }}</h4>
+            {% if object.vocabulary_status == 'Archived' %}
+                <h4>NOTE: This is an archived version of this term. There is a <a href="{% url detail_url object.revised_version.term object.revised_version.pk %}">new version</a> available.</h4>
+            {% endif %}
+            <div class="vocabulary-links">
+                {% if object.vocabulary_status != 'Archived' %}
+                    <a id="btnEdit" href="{% url create_url object.pk %}" class="button white">Edit</a>
+                    <a id="btnSKOS" download="{{vocabulary}}_{{object.term}}.csv" href="{% url 'api_dispatch_detail' resource_name=vocabulary api_name='v1' term=object.term %}?format=csv" target="_blank" class="button white">Download Term (CSV)</a>
+                {% endif %}
+            </div>
+        </header>
+
+        <div class="column two-columns data-view">
+            {% for field, value in fields %}
+                <div class="list-item column two-columns {% if forloop.last %} last-list-item {% endif %}">
+                    <div class="list-title"><h3>{{ field }}</h3></div>
+                    <div class="list-description"><p>{{ value|default:"-" }}</p></div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="clear"></div>
+    </section>
+
+    {% if user.is_staff %}
+        <section class="previous-versions">
+            <div class="column two-columns data-view">
+                <h4>
+                    {% if object.previous_version %}
+                        Previous version of this term: <br><a href="{% url detail_url object.previous_version.term object.previous_version.pk %}">{{ object.previous_version.term }}</a> {{ object.previous_version.definition }}
+                    {% endif %}
+                </h4>
+            </div>
+        </section>
+    {% endif %}
+{% endblock %}

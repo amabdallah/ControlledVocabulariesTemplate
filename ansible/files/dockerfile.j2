@@ -1,0 +1,6 @@
+FROM python:2.7
+RUN apt update && apt install -y python-pip
+ADD ./{{app_name}}/requirements.txt /srv/
+RUN pip install -r  /srv/requirements.txt
+EXPOSE 8000
+WORKDIR /srv/

@@ -1,0 +1,96 @@
+---
+
+# Django Secret Key
+# This is a hash needed for every django project. It must be protected
+# so it's a good idea to change it if this repository goes public
+# You can generate a new key on this site: http://www.miniwebtool.com/django-secret-key-generator/
+secret_key: "add value here"
+
+# Application Name
+# This is the name of the application, used to differentiate the path where the 
+# WaDE code is stored, from other applications deployed on the same instance
+app_name: "wade"
+
+# Clone Location
+# This is the path on the EC2 instance where the applications code is cloned
+# This path should be consistent between applications that would be deployed 
+# on the same instance, so if you change this value on this playbook you must
+# set the same exact value on other playbooks 'clone_location' variable
+clone_location: "/home/ubuntu/env"
+
+# Excel Location
+# Location where the excel spreadsheets should be placed in order to be accessible 
+# by the application containers
+excel_location: "/home/ubuntu/spreadsheets"
+
+# Static Root
+# Path where the static files are placed to be served by nginx
+static_root: "/srv/static"
+
+# Project Repository
+# This is the URL of this same repository with the username and password
+# You must replace "<github-username>" and "<github-passwd>" with your
+# actual username and password for github, to allow this project to be 
+# cloned from the ec2 instance
+project_repo: https://GitHubUserName:******@github.com/GitHubUserName/WaDEControlledVocabulary.git
+
+# wade credentials for the MySQL database container
+wade_db_name: WaDE
+wade_db_user: EnterUsername
+wade_db_password: EnterPass
+
+# MySQL root password. 
+# You will be asked for this password when you run commands
+# to backup or recover the database from the database_container
+# follow this link for more information:
+# https://github.com/amabdallah/WaDE2.0_CVsCVs#backup-and-restore-the-database-containers
+mysql_root_passwd: "EnterPass"
+
+# WaDE Django admin credentials
+# You should use this credentials when you login as admin into the WaDE web 
+# application to manage vocabularies requests. This admin user is created
+# automatically the first time you deploy this application
+wade_admin_user: EnterUserName1
+wade_admin_email: Enter email
+wade_admin_pass: EnterPass
+
+wade_admin_user1: EnterUserName2
+wade_admin_email1: Enter email
+wade_admin_pass1: EnterPass
+  
+# Credentials of the email account used to configure the SMTP server 
+email_host_user: 'EnterEmail'
+email_host_password: 'EnterPass'
+
+# Email that will appear as the sender when CVs are added and accepted
+email_sender: "EnterEmail"
+
+# List of emails that will receive a notification when a CV has been added and need approval
+# no comma between emails
+email_recipients: "EnterAdmin1Email EnterAdmin2Email"
+
+# Google recaptcha keys
+# Secret key given by the google captcha service
+wade_recaptcha_secret_key: "EnterHere"
+
+# User key given by the google captcha service
+wade_recaptcha_user_key: "EnterHere"
+
+# WaDE Container Name
+# This is the name of the application container. It is referenced on the "files/nginx.j2" 
+# template to help the webserver figure out how to reach the container and forward 
+# the requests for the valid DNS names
+wade_container: wade
+
+# WaDE Databse Container Name
+# This is name of the database container. It is referenced on the "deploy.yml" file
+# to relate the application and the database container
+wade_db_container: wade_db
+
+# WaDE Allowed Hosts
+# A list of sub-domanin names for the WaDE application. 
+# These are the names that the application will be redirected to when nginx receives a request
+# Also this are the only names the django application is going to answer to
+wade_allowed_hosts: "vocabulary.westernstateswater.org localhost"
+
+# vim:ft=ansible:

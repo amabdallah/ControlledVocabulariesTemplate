@@ -1,0 +1,31 @@
+{
+  "allowed_hosts": "",
+  "secret_key": "JOiI8sljzWvV5o9p19NOXy2UuuhFWuBJ",
+  "static_root": "",
+  "email_sender": "",
+  "email_recipients": "",
+  "email_host_user": "",
+  "email_host_password": "",
+  "recaptcha_secret_key": "",
+  "recaptcha_user_key": "",
+  "databases": [
+    {
+      "name": "",
+      "schema": "",
+      "engine": "django.db.backends.mysql",
+      "user": "",
+      "password": "",
+      "host": "",
+      "port": ""
+    },
+    {
+      "name": "",
+      "schema": "",
+      "engine": "django.db.backends.mysql",
+      "user": "",
+      "password": "",
+      "host": "",
+      "port": ""
+    }
+  ]
+}
